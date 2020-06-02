@@ -16,6 +16,7 @@ public class App
         actorSystem.tell("Hello World from Akka!");
         actorSystem.tell("Say hello!");
         actorSystem.tell("Who are you?");
+        actorSystem.tell("Create a Child");
 
     }
 }

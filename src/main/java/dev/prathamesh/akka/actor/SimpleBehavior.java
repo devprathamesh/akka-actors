@@ -1,5 +1,6 @@
 package dev.prathamesh.akka.actor;
 
+import akka.actor.typed.ActorRef;
 import akka.actor.typed.Behavior;
 import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.AbstractBehavior;
@@ -21,14 +22,21 @@ public class SimpleBehavior extends AbstractBehavior<String> {
         return newReceiveBuilder().
                 onMessageEquals("Say hello!", () -> {
                     System.out.printf("\n Hello!");
-                    return  this;})
+                    return  this;
+                })
                 .onMessageEquals("Who are you?", () -> {
                     System.out.printf("\n I am %s", getContext().getSelf().path());
-                    return  this;}).onAnyMessage(
-                message -> {
-                    System.out.printf("\n Message Received as %s ", message);
+                    return  this;
+                 })
+                .onMessageEquals("Create a Child", () -> {
+                    ActorRef<String> secondActor = getContext().spawn(SimpleBehavior.create(), "SecondActor");
+                    secondActor.tell("Who are you?");
+                    return  this;
+                })
+                .onAnyMessage(
+                    message -> {
+                        System.out.printf("\n Message Received as %s ", message);
                     return this;
-                }
-        ).build();
+                }).build();
     }
 }
